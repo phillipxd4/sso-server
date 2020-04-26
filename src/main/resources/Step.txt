@@ -1,0 +1,21 @@
+目標:實現單點登入系統+測試用客戶端服務
+
+1.資料庫及實體相關設定
+1-1.User(使用者) Role(腳色) Permission(權限)關聯實體建立
+1-2.建置repository controller以測試
+
+2.security相關設定
+2-1.基礎登入設置
+2-2.自定義AuthenticationProvider:實際驗證輸入資料與DB內資料流程
+2-3.自定義LoginFilter:從httpServletRequest取的帳號密碼, 方法驗證
+2-4.自定義AuthenticationSuccessHandler:回傳user基本資訊
+2-5.自定義AuthenticationFailureHandler:回傳錯誤訊息
+2-6.自定義登入錯誤exception
+
+3.oauth2相關設定
+3-1.建立client資料
+3-2.client資料由DB提供
+3-3.基礎authconfig設定
+3-4.套用authorizecode模式 /
+3-5.回傳token套用jwt token形式
+3-6.擴展jwt enhancer converter

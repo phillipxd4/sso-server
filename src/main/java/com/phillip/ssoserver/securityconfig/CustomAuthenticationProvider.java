@@ -1,6 +1,5 @@
 package com.phillip.ssoserver.securityconfig;
 
-import com.phillip.ssoserver.entity.Permission;
 import com.phillip.ssoserver.entity.Role;
 import com.phillip.ssoserver.entity.User;
 import com.phillip.ssoserver.repository.userrepo.IUserRepo;
@@ -12,8 +11,12 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /*
@@ -30,9 +33,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     IUserRepo userRepo;
 
     @Override
+    @Transactional /*To avoid org.hibernate.LazyInitializationException*/
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String name = authentication.getName();
-        String password = bCryptPasswordEncoder.encode(authentication.getCredentials().toString());
+        String password = authentication.getCredentials().toString();
         Optional<User> user = userRepo.findByAccountAndPassword(name, password);
         Set<SimpleGrantedAuthority> permissionList = null;
         Set<String> tempPermissionList = new HashSet<>();
