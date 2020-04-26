@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,11 +36,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String name = authentication.getName();
         String password = authentication.getCredentials().toString();
-        Optional<User> user = userRepo.findByAccountAndPassword(name, password);
+        User user = userRepo.findByAccountAndPassword(name, password);
         Set<SimpleGrantedAuthority> permissionList = null;
         Set<String> tempPermissionList = new HashSet<>();
-        if(user.isPresent()){
-            List<Role> roleList = user.get().getRoleList();
+        if(user!=null){
+            List<Role> roleList = user.getRoleList();
 
             //一個user多角色 一個角色多權限
             for(Role role : roleList){
@@ -52,7 +51,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             permissionList = tempPermissionList.stream().map(str -> new SimpleGrantedAuthority(str)).collect(Collectors.toSet());
         }
 
-        return new UsernamePasswordAuthenticationToken(user.get(), null, permissionList);
+        return new UsernamePasswordAuthenticationToken(user, null, permissionList);
     }
 
     @Override

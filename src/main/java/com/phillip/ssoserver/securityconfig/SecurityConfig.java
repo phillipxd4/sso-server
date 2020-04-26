@@ -15,7 +15,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.addFilterBefore(new CustomFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.formLogin()
+        http.formLogin().successHandler(new AuthSuccessHandler())
                 .and()
                 .httpBasic();
         http.requestMatchers().antMatchers("/**");
